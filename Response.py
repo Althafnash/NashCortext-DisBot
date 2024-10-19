@@ -2,6 +2,21 @@ import random
 from Knowledge_base import knowledge_base
 from datetime import datetime
 
+
+def help():
+    help_cmd = """
+        
+        /hello -- Greeting
+        /bye -- Goodbye 
+        /joke -- gives a random joke  
+        /quotes -- give a random quote 
+        /access knowledge base {serch term} -- access the knowledge base of the bot 
+        /time -- Tells the time 
+        /calculator {operation} {Firstnumber} {Secondnumber} -- calaculator  
+        
+    """
+    return help_cmd
+
 def log_message(username : str , user_message : str):
     with open("user_messages.log","a") as log_file:
         log_file.write(f"{username} : {user_message} \n")
@@ -81,6 +96,9 @@ def get_response(user_message: str,username: str) -> str:
             return str(result)  
         except ValueError:
             return "Please provide valid numbers."
+        
+    elif "/help" in user_message:
+        return help()
 
     else:
         return "Sorry, I don't understand that. Can you try asking something else? 🤔"
