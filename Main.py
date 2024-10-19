@@ -34,7 +34,7 @@ client: Client = Client(intents=intents)
 # List of allowed channel IDs where the bot is allowed to respond
 ALLOWED_CHANNELS = [123456789012345678, 987654321098765432, 1296687168634224711]  # Replace with actual channel IDs
 
-async def send_message(message: Message, user_message: str) -> None:
+async def send_message(message: Message, user_message: str , username: str) -> None:
     if not user_message:
         print("Message was empty because Intents were not enabled properly")
         return
@@ -44,7 +44,7 @@ async def send_message(message: Message, user_message: str) -> None:
         user_message = user_message[1:]
 
     try:
-        response: str = get_response(user_message)
+        response: str = get_response(user_message,username=username)
         if is_private:
             await message.author.send(response)
         else:
@@ -99,7 +99,7 @@ async def on_message(message: Message) -> None:
     if message.guild is None:
         # Handle DM
         print(f"Received message in DM from {message.author}: {message.content}")
-        await send_message(message=message, user_message=message.content)
+        await send_message(message=message, user_message=message.content, username=str(message.author))
     else:
         # Handle server messages
         if message.channel.id not in ALLOWED_CHANNELS:
@@ -124,7 +124,7 @@ async def on_message(message: Message) -> None:
                 await message.channel.send("No audio is currently playing.")
 
         # Send response for other messages
-        await send_message(message=message, user_message=user_message)
+        await send_message(message=message, user_message=user_message, username=username)  # Correctly passing username
 
 def main() -> None:
     client.run(TOKEN)
