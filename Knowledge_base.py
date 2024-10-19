@@ -1,0 +1,12 @@
+knowledge_base = {
+    "python": "Python is a high-level, interpreted programming language known for its readability and flexibility. It is widely used for web development, data analysis, AI, and more.",
+    "machine learning": "Machine Learning is a branch of artificial intelligence where machines learn from data and improve their performance without being explicitly programmed.",
+    "blockchain": "Blockchain is a distributed ledger technology that allows data to be securely stored across a decentralized network. It is most famous for its use in cryptocurrencies like Bitcoin.",
+    "html": "HTML (Hypertext Markup Language) is the standard language used to create web pages. It structures content on the web and is often paired with CSS and JavaScript for styling and functionality.",
+    "Physics": "Physics is the fundamental science that studies matter, energy, and their interactions. It seeks to understand the basic principles governing the natural world, from the smallest subatomic particles to the vast expanses of the universe. Key areas of study in physics include mechanics, thermodynamics, electromagnetism, and quantum mechanics.",
+    "Biology" : "Biology is the science of life, exploring the structure, function, growth, evolution, and distribution of living organisms. It encompasses a wide range of subdisciplines, including molecular biology, genetics, ecology, and evolutionary biology. Biologists study everything from the inner workings of cells to the complex interactions within ecosystems.",
+    "Chemistry": """Chemistry is the study of matter, its properties, and how it interacts with energy. It investigates the composition, structure, and transformation of substances at the atomic and molecular level. Chemistry plays a crucial role in understanding the world around us and has applications in fields such as medicine, materials science, and environmental studies. These three branches of science are deeply interconnected, often overlapping in areas such as biochemistry, biophysics, and physical chemistry. Together, they provide a comprehensive framework for understanding the natural world and drive innovations that shape our modern society.""",
+    "How can we see": "We see with the aid of our eyes but is only eyes important",
+    "Luminous objects" : "Luminous objects are objects that emit their Light",
+    "Non Luminous objects" : "Non-luminous objects that do not emit their Light but depend on another luminous object",
+}
