@@ -1,104 +1,70 @@
 import random 
 from Knowledge_base import knowledge_base
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+import requests
 
+load_dotenv()
 
-def help():
-    help_cmd = """
-        
-        /hello -- Greeting
-        /bye -- Goodbye 
-        /joke -- gives a random joke  
-        /quotes -- give a random quote 
-        /access knowledge base {serch term} -- access the knowledge base of the bot 
-        /time -- Tells the time 
-        /calculator {operation} {Firstnumber} {Secondnumber} -- calaculator  
-        
-    """
-    return help_cmd
+def Alpha(FROM: str, TO: str):
+    print("Alpha function working")
+    Alpha_API = os.getenv("ALPHA_API")
 
-def log_message(username : str , user_message : str):
-    with open("user_messages.log","a") as log_file:
-        log_file.write(f"{username} : {user_message} \n")
+    url = f'https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency={FROM}&to_currency={TO}&apikey={Alpha_API}'
+    r = requests.get(url)
 
-def get_time() -> str :
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return f"the current time is {current_time}"
+    # Check for successful response
+    if r.status_code != 200:
+        return f"Failed to retrieve data: {r.status_code}"
 
-def Calculator(operation: str , firstnumber:int , secondnumber:int):
-    if operation == "add":
-        return firstnumber + secondnumber
-    elif operation == "sub":
-        return firstnumber - secondnumber
-    elif operation == "multiply":
-        return firstnumber * secondnumber
-    elif operation == "divide":
-        return firstnumber / secondnumber
+    data = r.json()
+
+    # Check if the expected data is available in the response
+    if "Realtime Currency Exchange Rate" in data:
+        rate_info = data["Realtime Currency Exchange Rate"]
+        from_currency_name = rate_info["2. From_Currency Name"]
+        to_currency_name = rate_info["4. To_Currency Name"]
+        exchange_rate = rate_info["5. Exchange Rate"]
+
+        return f"The exchange rate from {from_currency_name} to {to_currency_name} is {exchange_rate}."
     else:
-        return "Not a valid operation"
-
-def get_response(user_message: str,username: str) -> str:
+        return "Failed to retrieve currency exchange rate."
+    
+    data = r.json()
+    
+    # Checking if the response contains the expected data
+    if "Realtime Currency Exchange Rate" in data:
+        exchange_rate = data["Realtime Currency Exchange Rate"]["5. Exchange Rate"]
+        return f"The exchange rate from {FROM} to {TO} is {exchange_rate}."
+    else:
+        return "Could not find the exchange rate. Please check the currency codes and try again."
+def get_response(user_message: str, username: str) -> str:
     user_message = user_message.lower()
     log_message(username, user_message)
 
-    # Simple keyword-based responses
-    if "/hello" in user_message:
-        Hello = [
-            "Hey!😊",
-            "Hi!👋",
-            "Sup!🙌"
-        ]
-        return random.choice(Hello)
-    elif "/bye" in user_message:
-        good = [
-            "Goodbye 👋",
-            "bye 👋"
-        ]
-        return random.choice(good)
-    elif "/joke" in user_message:
-        Jokes = [
-            "Why don't scientists trust atoms? Because they make up everything! 😄",
-            "Why did the chicken join a band? Because it had the drumsticks!  🐔🥁",
-            "What do you call fake spaghetti? An impasta! 🍝"
-        ]
-        return random.choice(Jokes)
-    elif "/quotes" in user_message:
-        Quotes = [
-            "The best time to plant a tree was 20 years ago. The second best time is now. 🌳",
-            "Do not watch the clock. Do what it does. Keep going. ⏳",
-            "The only way to do great work is to love what you do. 💼"
-        ]
-        return random.choice(Quotes)
-    
-    elif "/access knowledge base" in user_message:
-        response = "Here is what I found:\n"
-        for key, value in knowledge_base.items():
-            if key in user_message:
-                response += f"{key}: {value}\n"
-        if response == "Here is what I found:\n":
-            response = "No matching knowledge found."
-        return response
-    
-    elif "/time" in user_message:
-        return get_time()
-    
-    elif "/calculator" in user_message:
-        parts = user_message.split()
-        
-        if len(parts) != 4:  # Ensure the user provided the correct number of arguments
-            return "Usage: /calculator [operation] [number1] [number2]"
+    if "/stock" in user_message:
+        user_message_parts = user_message.split()
 
-        operation = parts[1]
-        try:
-            firstnumber = int(parts[2])
-            secondnumber = int(parts[3])
-            result = Calculator(operation=operation, firstnumber=firstnumber, secondnumber=secondnumber)
-            return str(result)  
-        except ValueError:
-            return "Please provide valid numbers."
-        
-    elif "/help" in user_message:
-        return help()
+        if len(user_message_parts) != 4:
+            return "Usage: /stock {API Name} {FROM currency} {TO currency}"
+
+        stock_API = user_message_parts[1].lower()
+        from_currency = user_message_parts[2].upper()
+        to_currency = user_message_parts[3].upper()
+
+        print(f"API Name: {stock_API}")
+        print(f"From Currency: {from_currency}")
+        print(f"To Currency: {to_currency}")
+
+        if stock_API == "tradeview":
+            return Alpha(FROM=from_currency, TO=to_currency)
+        else:
+            return "Invalid API name. Currently supported: TradeView."
 
     else:
         return "Sorry, I don't understand that. Can you try asking something else? 🤔"
+
+def log_message(username: str, user_message: str):
+    with open("user_messages.log", "a") as log_file:
+        log_file.write(f"{username}: {user_message}\n")
