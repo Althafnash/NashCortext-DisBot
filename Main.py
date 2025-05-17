@@ -107,7 +107,6 @@ async def play_audio(ctx: Message, url: str) -> None:
         await ctx.channel.send(f"❌ Error playing audio: {str(e)}")
         print(f"Error in play_audio: {e}")
 
-
 @client.event
 async def on_message(message: Message) -> None:
     # Ignore messages from the bot itself
